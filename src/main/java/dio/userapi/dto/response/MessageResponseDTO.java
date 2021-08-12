@@ -1,4 +1,4 @@
-package dio.userapi.dto;
+package dio.userapi.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
