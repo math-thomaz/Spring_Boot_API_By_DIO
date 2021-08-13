@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +28,7 @@ public class UserService {
         User userToSave = userMapper.toModel(userDTO);
 
         User registeredUser = userRepository.save(userToSave);
-        return MessageResponseDTO
-                .builder()
-                .message("User created with Id " + registeredUser.getId())
-                .build();
+        return createMessageResponse(registeredUser.getId(), "User created with Id ");
     }
 
     public List<UserDTO> listAll() {
@@ -40,11 +36,6 @@ public class UserService {
         return allUsers.stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
-    }
-
-    private User verifyIsExists(Long id) throws UserNotFoundException {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public UserDTO findById(Long id) throws UserNotFoundException {
@@ -57,5 +48,27 @@ public class UserService {
         verifyIsExists(id);
 
         userRepository.deleteById(id);
+    }
+
+    public MessageResponseDTO updateById(Long id, UserDTO userDTO) throws UserNotFoundException {
+        verifyIsExists(id);
+
+        User userToUpdate = userMapper.toModel(userDTO);
+
+        User updatedUser = userRepository.save(userToUpdate);
+
+        return createMessageResponse(updatedUser.getId(), "Updated user with Id ");
+    }
+
+    private User verifyIsExists(Long id) throws UserNotFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    private MessageResponseDTO createMessageResponse(Long id, String message) {
+        return MessageResponseDTO
+                .builder()
+                .message(message + id)
+                .build();
     }
 }
