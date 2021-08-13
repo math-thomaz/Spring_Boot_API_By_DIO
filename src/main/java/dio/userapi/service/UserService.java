@@ -8,6 +8,9 @@ import dio.userapi.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -28,5 +31,12 @@ public class UserService {
                 .builder()
                 .message("User created with Id " + registeredUser.getId())
                 .build();
+    }
+
+    public List<UserDTO> listAll() {
+        List<User> allUsers = userRepository.findAll();
+        return allUsers.stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
