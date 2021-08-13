@@ -3,6 +3,7 @@ package dio.userapi.controller;
 import dio.userapi.dto.request.UserDTO;
 import dio.userapi.dto.response.MessageResponseDTO;
 import dio.userapi.entity.User;
+import dio.userapi.exception.UserNotFoundException;
 import dio.userapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,10 @@ public class UserController {
     @GetMapping("/api/v1/user")
     public List<UserDTO> listAll() {
         return userService.listAll();
+    }
+
+    @GetMapping("/api/v1/user/{id}")
+    public UserDTO findById(@PathVariable Long id) throws UserNotFoundException {
+        return userService.findById(id);
     }
 }
