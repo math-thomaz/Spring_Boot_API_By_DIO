@@ -42,10 +42,20 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO findById(Long id) throws UserNotFoundException {
-        User user = userRepository.findById(id)
+    private User verifyIsExists(Long id) throws UserNotFoundException {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    public UserDTO findById(Long id) throws UserNotFoundException {
+        User user = verifyIsExists(id);
 
         return userMapper.toDTO(user);
+    }
+
+    public void delete(Long id) throws UserNotFoundException {
+        verifyIsExists(id);
+
+        userRepository.deleteById(id);
     }
 }
